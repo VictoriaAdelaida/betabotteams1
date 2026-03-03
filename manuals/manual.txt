@@ -1,3 +1,5 @@
 To reset a router, press and hold the reset button for 10 seconds.
 
 If the internet is not working, check if the router lights are on.
+
+If the router lights are not on, reset the router. 
