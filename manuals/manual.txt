@@ -1,5 +1,36 @@
-To reset a router, press and hold the reset button for 10 seconds.
+CONEXIÓN A RED INALÁMBRICA FUERA DEL DOMINIO
 
-If the internet is not working, check if the router lights are on.
+1. Abrir el "Centro de redes y recursos compartidos".
+2. Seleccionar "Administrar redes inalámbricas".
+3. Si la red "HERMECOWI" no aparece, seleccionar "Agregar".
+4. Elegir "Crear un perfil de red manualmente".
+5. Configurar la red con los siguientes parámetros:
+   - Nombre de red: HERMECOWI
+   - Tipo de seguridad: WPA2-Enterprise (si aplica)
+   - Tipo de cifrado: AES (si aplica)
 
-If the router lights are not on, reset the router. 
+6. Finalizar la creación del perfil.
+
+7. Ir a "Cambiar la configuración de conexión".
+8. Ir a la pestaña "Seguridad".
+9. Hacer clic en "Configuración".
+10. Desactivar la opción "Validar certificado del servidor".
+11. Hacer clic en "Configurar".
+12. Desactivar las opciones adicionales de autenticación automática.
+13. Hacer clic en "Aceptar".
+
+14. Ingresar las credenciales:
+   - Dominio
+   - Nombre de usuario
+   - Contraseña
+
+
+CONFIGURACIÓN DE PROXY EN INTERNET EXPLORER
+
+1. Abrir Internet Explorer.
+2. Ir a:
+   Herramientas → Opciones de Internet → Conexiones
+3. Hacer clic en "Configuración de LAN".
+4. En "Servidor proxy":
+   - Dirección: 10.0.0.70
+5. Hacer clic en "Aceptar".
