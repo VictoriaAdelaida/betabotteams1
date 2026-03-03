@@ -18,23 +18,46 @@ app.use((err, req, res, next) => {
 
 app.post("/chat", async (req, res) => {
   try {
-    const { message } = req.body || {};
-
-    if (!message) {
-      return res.status(400).json({ reply: "Message is required" });
+    if (!req.body || !req.body.message) {
+      return res.status(400).json({
+        error: "Missing 'message' in request body",
+        body: req.body
+      });
     }
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: message
-      })
+    const { message } = req.body;
+
+    const relevant = findRelevantChunks(message, chunks);
+    const prompt = buildPrompt(message, relevant);
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    // 🔥 RETURN EVERYTHING
+    return res.json({
+      debug: data,
+      extracted:
+        data?.candidates?.[0]?.content?.parts?.[0]?.text || null,
     });
+
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+});
 
     const data = await response.json();
 
