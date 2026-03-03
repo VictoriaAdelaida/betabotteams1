@@ -1,14 +1,11 @@
-function findRelevantChunks(question, chunks) {
-  const words = question.toLowerCase().split(" ");
+function findRelevantChunks(query, chunks) {
+  const lowerQuery = query.toLowerCase();
 
-  return chunks
-    .map(chunk => ({
-      text: chunk,
-      score: words.filter(w => chunk.toLowerCase().includes(w)).length
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
-    .map(c => c.text);
+  return chunks.filter(chunk => {
+    const lowerChunk = chunk.toLowerCase();
+
+    return lowerQuery
+      .split(" ")
+      .some(word => lowerChunk.includes(word));
+  }).slice(0, 3);
 }
-
-module.exports = { findRelevantChunks };
