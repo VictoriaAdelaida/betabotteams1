@@ -37,6 +37,7 @@ app.post("/chat", async (req, res) => {
     }
 
     const { message } = req.body;
+    console.log("Incoming message:", JSON.stringify(message));
 
     const relevant = findRelevantChunks(message, chunks);
     const prompt = buildPrompt(message, relevant);
