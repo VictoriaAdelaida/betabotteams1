@@ -1,13 +1,13 @@
-import express from "express";
-import fetch from "node-fetch";
+const express = require("express");
+const fetch = require("node-fetch");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ FIX: Add JSON body parser middleware
+// ✅ FIX: Parse JSON body
 app.use(express.json());
 
-// Optional: handle invalid JSON errors gracefully
+// Optional: handle invalid JSON errors
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
     console.error("Invalid JSON:", err.message);
@@ -18,14 +18,12 @@ app.use((err, req, res, next) => {
 
 app.post("/chat", async (req, res) => {
   try {
-    // ✅ Safe destructuring with fallback
     const { message } = req.body || {};
 
     if (!message) {
       return res.status(400).json({ reply: "Message is required" });
     }
 
-    // 🔁 Replace this with your actual AI/API logic
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
