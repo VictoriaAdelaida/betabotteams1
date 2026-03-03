@@ -9,3 +9,4 @@ function findRelevantChunks(query, chunks) {
       .some(word => lowerChunk.includes(word));
   }).slice(0, 3);
 }
+module.exports = { findRelevantChunks };
