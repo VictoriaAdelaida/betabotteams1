@@ -26,10 +26,10 @@ if (!process.env.GEMINI_API_KEY) {
 // Load manual
 const manualText = fs.readFileSync("./manuals/manual.txt", "utf-8");
 
-// 🔥 IMPORTANT FIX (Windows-safe splitting)
+// Windows-safe splitting
 const chunks = manualText.split(/\r?\n\r?\n/);
 
-// ✅ CLEAN VERSION OF /chat
+// /chat endpoint
 app.post("/chat", async (req, res) => {
   try {
     if (!req.body || !req.body.message) {
@@ -43,11 +43,8 @@ app.post("/chat", async (req, res) => {
 
     const relevant = findRelevantChunks(message, chunks);
 
-    // 🔥 DEBUG (correct place)
     console.log("CHUNKS:", chunks);
     console.log("RELEVANT:", relevant);
-
-    console.log("PROMPT SENT:\n", buildPrompt(question, chunks));
 
     const prompt = buildPrompt(message, relevant);
 
@@ -68,9 +65,9 @@ app.post("/chat", async (req, res) => {
       }
     );
 
-    console.log("RAW RESPONSE:", JSON.stringify(response, null, 2));
-
     const data = await response.json();
+
+    console.log("RAW DATA:", JSON.stringify(data, null, 2));
 
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
