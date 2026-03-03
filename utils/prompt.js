@@ -2,12 +2,12 @@ function buildPrompt(question, chunks) {
   return `
 Eres un asistente de soporte técnico.
 
-REGLAS ESTRICTAS:
-- SOLO puedes usar la información del manual
-- SIEMPRE debes responder usando el manual si hay información relacionada
-- NO puedes decir que no hay información si existe algo relevante
-- NO inventes información
-- Responde SIEMPRE en español
+INSTRUCCIONES:
+- Usa únicamente el texto del manual
+- Busca información que esté relacionada con la pregunta, aunque no sea exacta
+- SI encuentras información relacionada, debes responder usando esa información
+- Traduce la respuesta al español si está en inglés
+- NO digas que no hay información si existe algo mínimamente relevante
 
 MANUAL:
 ${chunks.join("\n\n")}
@@ -15,7 +15,9 @@ ${chunks.join("\n\n")}
 PREGUNTA:
 ${question}
 
-RESPUESTA:
+Responde directamente con la solución:
+`;
+}
 `;
 }
 
