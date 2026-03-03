@@ -20,6 +20,7 @@
   "homepage": "https://github.com/VictoriaAdelaida/betabotteams1#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "dotenv": "^16.4.5"
   }
 }
