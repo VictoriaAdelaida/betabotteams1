@@ -17,17 +17,22 @@ app.get("/", (req, res) => {
   res.send("API is running");
 });
 
+// Ensure API key exists
+if (!process.env.GEMINI_API_KEY) {
+  console.error("❌ GEMINI_API_KEY is missing in environment variables");
+  process.exit(1);
+}
+
 // Load manual
 const manualText = fs.readFileSync("./manuals/manual.txt", "utf-8");
 const chunks = manualText.split("\n\n");
 
-// 🔥 DEBUG VERSION OF /chat
+// ✅ CLEAN VERSION OF /chat
 app.post("/chat", async (req, res) => {
   try {
     if (!req.body || !req.body.message) {
       return res.status(400).json({
         error: "Missing 'message' in request body",
-        body: req.body,
       });
     }
 
@@ -51,16 +56,17 @@ app.post("/chat", async (req, res) => {
 
     const data = await response.json();
 
-    // 🔥 Return full debug info
-    return res.json({
-      debug: data,
-      extracted:
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || null,
-    });
+    const reply =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No se encontró respuesta en el manual";
+
+    return res.json({ reply });
 
   } catch (err) {
+    console.error("🔥 Server error:", err);
+
     return res.status(500).json({
-      error: err.message,
+      error: "Internal server error",
     });
   }
 });
