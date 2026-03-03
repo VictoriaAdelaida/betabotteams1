@@ -25,7 +25,9 @@ if (!process.env.GEMINI_API_KEY) {
 
 // Load manual
 const manualText = fs.readFileSync("./manuals/manual.txt", "utf-8");
-const chunks = manualText.split("\n\n");
+
+// 🔥 IMPORTANT FIX (Windows-safe splitting)
+const chunks = manualText.split(/\r?\n\r?\n/);
 
 // ✅ CLEAN VERSION OF /chat
 app.post("/chat", async (req, res) => {
@@ -40,6 +42,11 @@ app.post("/chat", async (req, res) => {
     console.log("Incoming message:", JSON.stringify(message));
 
     const relevant = findRelevantChunks(message, chunks);
+
+    // 🔥 DEBUG (correct place)
+    console.log("CHUNKS:", chunks);
+    console.log("RELEVANT:", relevant);
+
     const prompt = buildPrompt(message, relevant);
 
     const response = await fetch(
@@ -77,7 +84,4 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log("MESSAGE:", message);
-  console.log("CHUNKS:", chunks);
-  console.log("RELEVANT:", relevant);
 });
