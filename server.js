@@ -1,27 +1,33 @@
+require("dotenv").config();
+
 const express = require("express");
+const fs = require("fs");
 const fetch = require("node-fetch");
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const { findRelevantChunks } = require("./utils/retrieval");
+const { buildPrompt } = require("./utils/prompt");
 
-// ✅ FIX: Parse JSON body
+const app = express();
+
+// Parse JSON
 app.use(express.json());
 
-// Optional: handle invalid JSON errors
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
-    console.error("Invalid JSON:", err.message);
-    return res.status(400).json({ reply: "Invalid JSON format" });
-  }
-  next();
+// Health check
+app.get("/", (req, res) => {
+  res.send("API is running");
 });
 
+// Load manual
+const manualText = fs.readFileSync("./manuals/manual.txt", "utf-8");
+const chunks = manualText.split("\n\n");
+
+// 🔥 DEBUG VERSION OF /chat
 app.post("/chat", async (req, res) => {
   try {
     if (!req.body || !req.body.message) {
       return res.status(400).json({
         error: "Missing 'message' in request body",
-        body: req.body
+        body: req.body,
       });
     }
 
@@ -45,7 +51,7 @@ app.post("/chat", async (req, res) => {
 
     const data = await response.json();
 
-    // 🔥 RETURN EVERYTHING
+    // 🔥 Return full debug info
     return res.json({
       debug: data,
       extracted:
@@ -59,23 +65,8 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-    const data = await response.json();
-
-    const reply =
-      data.output?.[0]?.content?.[0]?.text ||
-      "No response from AI";
-
-    res.json({ reply });
-
-  } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ reply: "Error" });
-  }
-});
-
-app.get("/", (req, res) => {
-  res.send("Server is running");
-});
+// Use Render port
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
