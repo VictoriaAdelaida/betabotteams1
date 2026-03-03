@@ -18,7 +18,5 @@ ${question}
 Responde directamente con la solución:
 `;
 }
-`;
-}
 
 module.exports = { buildPrompt };
