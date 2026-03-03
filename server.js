@@ -77,4 +77,7 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log("MESSAGE:", message);
+  console.log("CHUNKS:", chunks);
+  console.log("RELEVANT:", relevant);
 });
