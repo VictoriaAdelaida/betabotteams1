@@ -47,6 +47,8 @@ app.post("/chat", async (req, res) => {
     console.log("CHUNKS:", chunks);
     console.log("RELEVANT:", relevant);
 
+    console.log("PROMPT SENT:\n", buildPrompt(question, chunks));
+
     const prompt = buildPrompt(message, relevant);
 
     console.log("========== PROMPT SENT ==========");
@@ -65,6 +67,8 @@ app.post("/chat", async (req, res) => {
         }),
       }
     );
+
+    console.log("RAW RESPONSE:", JSON.stringify(response, null, 2));
 
     const data = await response.json();
 
