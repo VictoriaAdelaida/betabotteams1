@@ -29,11 +29,18 @@ if (!process.env.GEMINI_API_KEY) {
 // Load manual
 const manualText = fs.readFileSync("./manuals/manual.txt", "utf-8");
 
-// Windows-safe splitting
-const chunks = manualText.split(/\r?\n\r?\n/);
+// 🔥 SPLIT RAW
+const rawChunks = manualText.split(/\r?\n\r?\n/);
+
+// 🔥 FILTER ONLY STEPS
+const chunks = rawChunks.filter(chunk =>
+  chunk.trim().toLowerCase().startsWith("paso")
+);
 
 // 🔥 DEBUG: total chunks
-console.log("TOTAL CHUNKS LOADED:", chunks.length);
+console.log("TOTAL RAW CHUNKS:", rawChunks.length);
+console.log("FILTERED STEPS:", chunks.length);
+console.log("STEPS CONTENT:", chunks);
 
 // /chat endpoint
 app.post("/chat", async (req, res) => {
@@ -88,6 +95,7 @@ app.post("/chat", async (req, res) => {
     const stepIndex = session.step - 1;
 
     // 🔥 DEBUG CURRENT STEP
+    console.log("CURRENT STEP:", session.step);
     console.log("CURRENT STEP INDEX:", stepIndex);
     console.log("CURRENT STEP CONTENT:", chunks[stepIndex]);
 
@@ -96,7 +104,7 @@ app.post("/chat", async (req, res) => {
       chunks[stepIndex + 1] // optional context
     ].filter(Boolean);
 
-    console.log("CHUNKS:", chunks);
+    console.log("CHUNKS (FILTERED):", chunks);
 
     // 🔥 BETTER RELEVANT LOGGING
     relevant.forEach((chunk, i) => {
