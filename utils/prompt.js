@@ -38,6 +38,9 @@ REGLAS ESTRICTAS:
 13. NUNCA combines múltiples pasos en una sola respuesta.
 14. SIEMPRE responde con el PASO ACTUAL indicado por el sistema.
 15. NO adelantes pasos aunque creas que es obvio.
+16. Cada "PASO X:" del manual es una unidad independiente.
+17. Debes copiar EXACTAMENTE el contenido del paso correspondiente.
+18. NO resumas ni modifiques el contenido del paso.
 
 ⚠️ USO DEL MANUAL (CRÍTICO):
 - Debes EXTRAER la instrucción desde el manual
