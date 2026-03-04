@@ -65,7 +65,7 @@ FORMATO DE RESPUESTA:
 - Sin explicaciones adicionales
 
 MANUAL (ORDEN IMPORTA):
-${chunks.join("\n\n")}
+${relevant.join("\n\n")}
 
 INPUT DEL SISTEMA:
 ${question}
