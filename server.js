@@ -9,8 +9,8 @@ const { buildPrompt } = require("./utils/prompt");
 
 const app = express();
 
-// 🔥 SIMPLE MEMORY (last message)
-let lastMessage = "";
+// 🔥 SESSION MEMORY (per user, resets on restart)
+const sessions = {};
 
 // Parse JSON
 app.use(express.json());
@@ -35,24 +35,35 @@ const chunks = manualText.split(/\r?\n\r?\n/);
 // /chat endpoint
 app.post("/chat", async (req, res) => {
   try {
-    if (!req.body || !req.body.message) {
+    if (!req.body || !req.body.message || !req.body.sessionId) {
       return res.status(400).json({
-        error: "Missing 'message' in request body",
+        error: "Missing 'message' or 'sessionId' in request body",
       });
     }
 
-    const { message } = req.body;
-    console.log("Incoming message:", JSON.stringify(message));
+    const { message, sessionId } = req.body;
 
-    // 🔥 COMBINE WITH LAST MESSAGE (memory hack)
-    const combinedMessage = lastMessage
-      ? lastMessage + "\n" + message
+    console.log("Incoming message:", JSON.stringify(message));
+    console.log("Session ID:", sessionId);
+
+    // 🔥 Initialize session if not exists
+    if (!sessions[sessionId]) {
+      sessions[sessionId] = {
+        lastMessage: ""
+      };
+    }
+
+    const previousMessage = sessions[sessionId].lastMessage;
+
+    // 🔥 Combine memory
+    const combinedMessage = previousMessage
+      ? previousMessage + "\n" + message
       : message;
 
     console.log("COMBINED MESSAGE:", JSON.stringify(combinedMessage));
 
-    // Save current message for next request
-    lastMessage = message;
+    // 🔥 Save ONLY last message (simple memory)
+    sessions[sessionId].lastMessage = message;
 
     const relevant = findRelevantChunks(combinedMessage, chunks);
 
