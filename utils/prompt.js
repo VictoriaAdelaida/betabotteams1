@@ -1,4 +1,4 @@
-function buildPrompt(message, relevant, session.step) {
+function buildPrompt(message, relevant, step) {
   return `
 ROL: Eres un ingeniero de soporte técnico experto.
 
