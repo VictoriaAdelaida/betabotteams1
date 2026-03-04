@@ -68,7 +68,7 @@ MANUAL (ORDEN IMPORTA):
 ${relevant.join("\n\n")}
 
 INPUT DEL SISTEMA:
-${question}
+${message}
 
 RESPUESTA:
 `;
