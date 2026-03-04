@@ -6,7 +6,7 @@ OBJETIVO:
 Responder SIEMPRE basado en el manual.
 
 REGLA CRÍTICA:
-- SOLO puedes responder con el PASO ${currentStep}
+- SOLO puedes responder con el PASO ${step}
 - NO puedes usar otro paso
 - NO puedes inventar contenido fuera del texto dado
 
