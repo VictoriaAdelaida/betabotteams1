@@ -1,29 +1,39 @@
+PROBLEMA:
 Si al abrir Outlook o Windows aparece un mensaje indicando que la contraseña está vencida, debes restablecerla.
 
-Para cambiar la contraseña:
+PROCESO: CAMBIO DE CONTRASEÑA
 
-Paso 1. Ingresa a la página:
+PASO 1:
+Ingresa a la página:
 https://correo.hermeco.com
 
-Paso 2. Una vez haya entrado a la pagina. En la pantalla de inicio de sesión:
+PASO 2:
+En la pantalla de inicio de sesión:
 - Ingresa el usuario en formato: hermeco\usuario
 - El usuario corresponde al primer nombre seguido de las iniciales del primer y segundo apellido
 
-Paso 3. Al intentar iniciar sesión luego de haber ingresado su usuario en la pagina:
+PASO 3:
+Al intentar iniciar sesión:
 - El sistema solicitará cambiar la contraseña
 
-Paso 4. Para cambiar la contraseña, ingresa los datos requeridos:
-- Primero escribe la contraseña actual
-- Luego escribe la nueva contraseña
+PASO 4:
+Ingresa los datos requeridos:
+- Contraseña actual
+- Nueva contraseña
 
-Paso 5. Recomendaciones de seguridad:
+PASO 5:
+Recomendaciones de seguridad:
 - No uses contraseñas como:
   Hermeco.123
   Hermeco.2020
-  o similares
-- Estas contraseñas son inseguras y no cumplen con buenas prácticas
+- Usa contraseñas seguras
 
-Paso 6. Siempre utiliza una contraseña segura y difícil de adivinar.
-Paso 7. En "Servidor proxy":
-   - Dirección: 10.0.0.70
-Paso 8. Hacer clic en "Aceptar".
+PASO 6:
+Utiliza una contraseña segura y difícil de adivinar.
+
+PASO 7:
+En "Servidor proxy":
+- Dirección: 10.0.0.70
+
+PASO 8:
+Haz clic en "Aceptar".
