@@ -46,7 +46,7 @@ app.post("/chat", async (req, res) => {
     console.log("Incoming message:", JSON.stringify(message));
     console.log("Session ID:", sessionId);
 
-    // 🔥 Initialize session if not exists
+    // 🔥 Initialize session
     if (!sessions[sessionId]) {
       sessions[sessionId] = {
         step: 1,
@@ -60,33 +60,50 @@ app.post("/chat", async (req, res) => {
 
     const lowerMsg = message.toLowerCase();
 
-    // 🔥 Detect if user completed a step (more precise)
-    const isProgress = /^(ok|okay|listo|hecho|ya( lo)? hice|ya qued[oó]|ya ingres[eé])/i.test(lowerMsg);
+    // 🔥 IMPROVED progress detection
+    const isProgress =
+      /^(ok|okay|listo|hecho|ya|ya hice|ya lo hice|ya quedo|ya quedó|ya ingrese|ya ingresé|siguiente|continua|continúe|ahora que)/i.test(lowerMsg) ||
+      lowerMsg.includes("siguiente") ||
+      lowerMsg.includes("que sigue") ||
+      lowerMsg.includes("ahora que");
 
     if (isProgress) {
       session.step += 1;
     }
 
-    // 🔥 Save last message
+    // 🔥 Prevent overflow
+    if (session.step > chunks.length) {
+      session.step = chunks.length;
+    }
+
+    // Save last message
     session.lastMessage = message;
 
     console.log("SESSION AFTER:", session);
 
-    // 🔥 STEP CONTROL (THIS IS THE KEY FIX)
+    // 🔥 STEP CONTROL
     const stepIndex = session.step - 1;
 
     const relevant = [
       chunks[stepIndex],
-      chunks[stepIndex + 1], // optional context
+      chunks[stepIndex + 1] // optional context
     ].filter(Boolean);
 
     console.log("CHUNKS:", chunks);
     console.log("RELEVANT (STEP-BASED):", relevant);
 
-    // 🔥 Pass step info into prompt
+    // 🔥 FAILSAFE (if something breaks)
+    if (!relevant.length) {
+      return res.json({
+        reply: "No se encontró información para este paso."
+      });
+    }
+
+    // 🔥 PROMPT (clean + controlled)
     const prompt = buildPrompt(
-      `Paso actual: ${session.step}\nMensaje: ${message}`,
-      relevant
+      message,
+      relevant,
+      session.step
     );
 
     console.log("========== PROMPT SENT ==========");
