@@ -32,6 +32,9 @@ const manualText = fs.readFileSync("./manuals/manual.txt", "utf-8");
 // Windows-safe splitting
 const chunks = manualText.split(/\r?\n\r?\n/);
 
+// 🔥 DEBUG: total chunks
+console.log("TOTAL CHUNKS LOADED:", chunks.length);
+
 // /chat endpoint
 app.post("/chat", async (req, res) => {
   try {
@@ -84,22 +87,30 @@ app.post("/chat", async (req, res) => {
     // 🔥 STEP CONTROL
     const stepIndex = session.step - 1;
 
+    // 🔥 DEBUG CURRENT STEP
+    console.log("CURRENT STEP INDEX:", stepIndex);
+    console.log("CURRENT STEP CONTENT:", chunks[stepIndex]);
+
     const relevant = [
       chunks[stepIndex],
       chunks[stepIndex + 1] // optional context
     ].filter(Boolean);
 
     console.log("CHUNKS:", chunks);
-    console.log("RELEVANT (STEP-BASED):", relevant);
 
-    // 🔥 FAILSAFE (if something breaks)
+    // 🔥 BETTER RELEVANT LOGGING
+    relevant.forEach((chunk, i) => {
+      console.log(`RELEVANT[${i}]:`, chunk);
+    });
+
+    // 🔥 FAILSAFE
     if (!relevant.length) {
       return res.json({
         reply: "No se encontró información para este paso."
       });
     }
 
-    // 🔥 PROMPT (clean + controlled)
+    // 🔥 PROMPT
     const prompt = buildPrompt(
       message,
       relevant,
