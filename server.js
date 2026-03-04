@@ -9,6 +9,9 @@ const { buildPrompt } = require("./utils/prompt");
 
 const app = express();
 
+// 🔥 SIMPLE MEMORY (last message)
+let lastMessage = "";
+
 // Parse JSON
 app.use(express.json());
 
@@ -41,12 +44,22 @@ app.post("/chat", async (req, res) => {
     const { message } = req.body;
     console.log("Incoming message:", JSON.stringify(message));
 
-    const relevant = findRelevantChunks(message, chunks);
+    // 🔥 COMBINE WITH LAST MESSAGE (memory hack)
+    const combinedMessage = lastMessage
+      ? lastMessage + "\n" + message
+      : message;
+
+    console.log("COMBINED MESSAGE:", JSON.stringify(combinedMessage));
+
+    // Save current message for next request
+    lastMessage = message;
+
+    const relevant = findRelevantChunks(combinedMessage, chunks);
 
     console.log("CHUNKS:", chunks);
     console.log("RELEVANT:", relevant);
 
-    const prompt = buildPrompt(message, relevant);
+    const prompt = buildPrompt(combinedMessage, relevant);
 
     console.log("========== PROMPT SENT ==========");
     console.log(prompt);
