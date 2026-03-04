@@ -49,28 +49,45 @@ app.post("/chat", async (req, res) => {
     // 🔥 Initialize session if not exists
     if (!sessions[sessionId]) {
       sessions[sessionId] = {
+        step: 1,
         lastMessage: ""
       };
     }
 
-    const previousMessage = sessions[sessionId].lastMessage;
+    const session = sessions[sessionId];
 
-    // 🔥 Combine memory
-    const combinedMessage = previousMessage
-      ? previousMessage + "\n" + message
-      : message;
+    console.log("SESSION BEFORE:", session);
 
-    console.log("COMBINED MESSAGE:", JSON.stringify(combinedMessage));
+    const lowerMsg = message.toLowerCase();
 
-    // 🔥 Save ONLY last message (simple memory)
-    sessions[sessionId].lastMessage = message;
+    // 🔥 Detect if user completed a step (more precise)
+    const isProgress = /^(ok|okay|listo|hecho|ya( lo)? hice|ya qued[oó]|ya ingres[eé])/i.test(lowerMsg);
 
-    const relevant = findRelevantChunks(combinedMessage, chunks);
+    if (isProgress) {
+      session.step += 1;
+    }
+
+    // 🔥 Save last message
+    session.lastMessage = message;
+
+    console.log("SESSION AFTER:", session);
+
+    // 🔥 STEP CONTROL (THIS IS THE KEY FIX)
+    const stepIndex = session.step - 1;
+
+    const relevant = [
+      chunks[stepIndex],
+      chunks[stepIndex + 1], // optional context
+    ].filter(Boolean);
 
     console.log("CHUNKS:", chunks);
-    console.log("RELEVANT:", relevant);
+    console.log("RELEVANT (STEP-BASED):", relevant);
 
-    const prompt = buildPrompt(combinedMessage, relevant);
+    // 🔥 Pass step info into prompt
+    const prompt = buildPrompt(
+      `Paso actual: ${session.step}\nMensaje: ${message}`,
+      relevant
+    );
 
     console.log("========== PROMPT SENT ==========");
     console.log(prompt);
