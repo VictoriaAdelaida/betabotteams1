@@ -1,9 +1,14 @@
-function buildPrompt(question, chunks) {
+function buildPrompt(message, relevant, session.step) {
   return `
 ROL: Eres un ingeniero de soporte técnico experto.
 
 OBJETIVO:
 Responder SIEMPRE basado en el manual.
+
+REGLA CRÍTICA:
+- SOLO puedes responder con el PASO ${currentStep}
+- NO puedes usar otro paso
+- NO puedes inventar contenido fuera del texto dado
 
 CONTEXTO IMPORTANTE:
 - El sistema te indica explícitamente el PASO ACTUAL dentro del mensaje.
